@@ -1,4 +1,3 @@
-from collections import Counter
 from random import randint
 
 from utils import DuplicateQueen, QueenOutOfChessboard, ChessboardIsEmpty
@@ -47,19 +46,19 @@ class Chessboard(object):
         self.n = n
         self.queens = []
 
-    def count_conflicts(self):
-        same_position_conflicts = len(self.queens) - len(set(self.queens))
-        same_x_conflicts = sum(filter(lambda occurences: occurences > 1,
-                                      Counter(map(lambda queen: queen.x, self.queens)).values()))
-        same_y_conflicts = sum(filter(lambda occurences: occurences > 1,
-                                      Counter(map(lambda queen: queen.y, self.queens)).values()))
-        diagonal_conflicts = 0
-        if self.queen_count() > 1:
-            for queen in self.queens:
-                for second_queen in (self.queens[1:]):
-                    if abs(second_queen.x - queen.x) == abs(second_queen.y - queen.y):
-                        diagonal_conflicts += 1
-        return same_x_conflicts + same_y_conflicts + same_position_conflicts + diagonal_conflicts
+    # def count_conflicts(self):
+    #     same_position_conflicts = len(self.queens) - len(set(self.queens))
+    #     same_x_conflicts = sum(filter(lambda occurences: occurences > 1,
+    #                                   Counter(map(lambda queen: queen.x, self.queens)).values()))
+    #     same_y_conflicts = sum(filter(lambda occurences: occurences > 1,
+    #                                   Counter(map(lambda queen: queen.y, self.queens)).values()))
+    #     diagonal_conflicts = 0
+    #     if self.queen_count() > 1:
+    #         for queen in self.queens:
+    #             for second_queen in (self.queens[1:]):
+    #                 if abs(second_queen.x - queen.x) == abs(second_queen.y - queen.y):
+    #                     diagonal_conflicts += 1
+    #     return same_x_conflicts + same_y_conflicts + same_position_conflicts + diagonal_conflicts
 
     def add_queen(self, queen):
         """

@@ -22,8 +22,8 @@ class SameRowConstraint(Constraint):
 class SameDiagonalConstraint(Constraint):
     def is_broken(self, chessboard):
         if chessboard.queen_count() > 1:
-            for queen in chessboard.queens:
-                for second_queen in (chessboard.queens[1:]):
+            for index, queen in enumerate(chessboard.queens[:-1]):
+                for second_queen in chessboard.queens[index+1:]:
                     if abs(second_queen.x - queen.x) == abs(second_queen.y - queen.y):
                         return True
                     else:
