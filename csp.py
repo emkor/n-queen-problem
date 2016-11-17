@@ -26,10 +26,11 @@ def csp(N, constraints, new_value_selector_function):
             log("Found solution! Returning chessboard: {}".format(existing_queens))
             return existing_queens
         possible_values = new_value_selector_function(existing_queens, N)
-        if not possible_values:
+        if N - len(existing_queens) > len(possible_values):
+            log("\tforwardcheck, need {} more values, but possible is only {}".format(N - len(existing_queens), len(possible_values)))
             return None
         else:
-            log("\t\twith: {} existing: {} possible: {}".format(new_value_selector_function.func_name, len(existing_queens), len(possible_values)))
+            log("\twith: {} existing: {} possible: {}".format(new_value_selector_function.func_name, len(existing_queens), len(possible_values)))
             for possible_queen in possible_values:
                 queens = go(existing_queens + [possible_queen])
                 if queens is not None:

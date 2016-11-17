@@ -8,11 +8,11 @@ def visualize_stats(multiple_run_stats, color, label):
     :type color: str
     :type label: str
     """
-    plt.xlabel("Iteration")
+    plt.xlabel("Time (seconds)")
     plt.ylabel("properly placed queens")
     for run_stats in multiple_run_stats:
         iterations, seconds, values = split_to_iters_time_and_values(run_stats)
-        plt.plot(iterations, values, "{}--".format(color), label=label)
+        plt.plot(seconds, values, "{}--".format(color), label=label)
 
 
 def get_avg_iterations(mutliple_run_iterations):
@@ -25,6 +25,15 @@ def get_avg_iterations(mutliple_run_iterations):
         iterations_sum += len(run_iterations)
     return float(iterations_sum) / float(len(mutliple_run_iterations))
 
+def get_avg_seconds(mutliple_run_stats):
+    """
+    :type mutliple_run_iterations: list[list[model.Stat]]
+    :rtype: float
+    """
+    time_sum = 0
+    for run_stats in mutliple_run_stats:
+        time_sum += max([stat.seconds for stat in run_stats])
+    return float(time_sum) / float(len(mutliple_run_stats))
 
 def split_to_iters_time_and_values(run_stats):
     """
