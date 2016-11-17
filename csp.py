@@ -29,7 +29,7 @@ def csp(N, constraints, new_value_selector_function):
         if not possible_values:
             return None
         else:
-            log("\tstill has {} possible queens: {}".format(len(possible_values), possible_values))
+            log("\t\twith: {} existing: {} possible: {}".format(new_value_selector_function.func_name, len(existing_queens), len(possible_values)))
             for possible_queen in possible_values:
                 queens = go(existing_queens + [possible_queen])
                 if queens is not None:

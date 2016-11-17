@@ -15,6 +15,17 @@ def visualize_stats(multiple_run_stats, color, label):
         plt.plot(iterations, values, "{}--".format(color), label=label)
 
 
+def get_avg_iterations(mutliple_run_iterations):
+    """
+    :type mutliple_run_iterations: list[list[model.Stat]]
+    :rtype: float
+    """
+    iterations_sum = 0
+    for run_iterations in mutliple_run_iterations:
+        iterations_sum += len(run_iterations)
+    return float(iterations_sum) / float(len(mutliple_run_iterations))
+
+
 def split_to_iters_time_and_values(run_stats):
     """
     :type run_stats: list[model.Stat]

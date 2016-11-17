@@ -1,7 +1,7 @@
 from random import shuffle
 
 from model import Queen
-from utils import are_queens_on_diagonal
+from utils import are_queens_on_diagonal, log
 
 
 def get_all_positions(existing_queens, chessboard_size):
