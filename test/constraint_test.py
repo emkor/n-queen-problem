@@ -36,7 +36,7 @@ class ConstraintTest(unittest.TestCase):
         self.assertTrue(self.same_row_constraint.is_broken(chessboard))
         self.assertFalse(self.same_diagonal_constraint.is_broken(chessboard))
 
-    def test_should_same_diagonal_constraintt_fail(self):
+    def test_should_same_diagonal_constraint_fail(self):
         chessboard = Chessboard(n=4)
 
         chessboard.add_queen(Queen(1, 1))

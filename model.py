@@ -3,6 +3,28 @@ from random import randint
 from utils import DuplicateQueen, QueenOutOfChessboard, ChessboardIsEmpty
 
 
+def any_constraint_broken(queens, constraints):
+    """
+    :type queens: list[model.Queen]
+    :type constraints: list[constraint.Constraint]
+    :rtype: bool
+    """
+    return any(map(lambda constraint: constraint.is_broken(queens), constraints))
+
+
+def get_possible_values(queens, n):
+    """
+    :type queens: list[model.Queen]
+    :type n: int
+    :rtype: set[model.Queen]
+    """
+    possible_queens = set()
+    for x in range(0, n):
+        for y in range(0, n):
+            possible_queens.add(Queen(x, y))
+    return set(possible_queens - set(queens))
+
+
 def get_random_queen(n):
     """
     :type n: int
@@ -46,27 +68,15 @@ class Chessboard(object):
         self.n = n
         self.queens = []
 
-    # def count_conflicts(self):
-    #     same_position_conflicts = len(self.queens) - len(set(self.queens))
-    #     same_x_conflicts = sum(filter(lambda occurences: occurences > 1,
-    #                                   Counter(map(lambda queen: queen.x, self.queens)).values()))
-    #     same_y_conflicts = sum(filter(lambda occurences: occurences > 1,
-    #                                   Counter(map(lambda queen: queen.y, self.queens)).values()))
-    #     diagonal_conflicts = 0
-    #     if self.queen_count() > 1:
-    #         for queen in self.queens:
-    #             for second_queen in (self.queens[1:]):
-    #                 if abs(second_queen.x - queen.x) == abs(second_queen.y - queen.y):
-    #                     diagonal_conflicts += 1
-    #     return same_x_conflicts + same_y_conflicts + same_position_conflicts + diagonal_conflicts
-
     def add_queen(self, queen):
         """
         :type queen: model.Queen
+        :rtype queen: model.Chessboard
         """
         if self.n > queen.x >= 0 and self.n > queen.y >= 0:
             if queen not in self.queens:
                 self.queens.append(queen)
+                return self
             else:
                 raise DuplicateQueen("{} is already on chessboard".format(queen))
         else:
@@ -80,3 +90,10 @@ class Chessboard(object):
 
     def queen_count(self):
         return len(self.queens)
+
+    def __str__(self):
+        return "Chessboard with {} queens: <{}>".format(self.queen_count(),
+                                                        ", ".join(map(lambda queen: str(queen), self.queens)))
+
+    def __repr__(self):
+        return self.__str__()
