@@ -1,3 +1,6 @@
+from utils import are_queens_on_diagonal
+
+
 class Constraint(object):
     def is_broken(self, queens):
         """
@@ -23,9 +26,11 @@ class SameDiagonalConstraint(Constraint):
     def is_broken(self, queens):
         if len(queens) > 1:
             for index, queen in enumerate(queens[:-1]):
-                for second_queen in queens[index+1:]:
-                    if abs(second_queen.x - queen.x) == abs(second_queen.y - queen.y):
+                for second_queen in queens[index + 1:]:
+                    if are_queens_on_diagonal(queen, second_queen):
                         return True
                     else:
                         continue
         return False
+
+

@@ -1,54 +1,39 @@
-from constraint import SameColumnConstraint, SameRowConstraint, SameDiagonalConstraint
-from model import get_random_queen, Chessboard, Queen
-from utils import log, DuplicateQueen, get_possible_values, any_constraint_broken
+from datetime import datetime
+from model import any_constraint_broken, Stat
+from utils import log, seconds_since
 
 
-def csp(N, constraints, n_queens=8, iterations=10000):
+def csp(N, constraints, new_value_selector_function):
     """
     :type N: int
     :type constraints: list[constraint.Constraint]
-    :type n_queens: int
-    :type iterations: int
-    :rtype: model.Chessboard
+    :rtype: list[model.Queen]
     """
+    stats = []
+    start_time = datetime.now()
 
-    def go(chessboard, iteration, possible_values):
+    def go(existing_queens):
         """
-        :type chessboard: model.Chessboard
-        :type iteration: int
-        :type possible_values: set[model.Queen]
-        :rtype: model.Chessboard
+        :type existing_queens: list[model.Queen]
+        :rtype: list[model.Queen]
         """
-        log("Iteration {}: current queen count: {}".format(iterations, chessboard.queen_count()))
-        if chessboard.queen_count() >= n_queens:
-            log("Found solution! Returning chessboard: {}".format(chessboard))
-            return chessboard
-        if iterations < 0:
-            log("Could not find solution.")
+        log("Current queen count: {} with config: {}".format(len(existing_queens),
+                                                             existing_queens))
+        if any_constraint_broken(existing_queens, constraints):
+            return None
+        stats.append(Stat(len(stats), seconds_since(start_time), len(existing_queens)))
+        if len(existing_queens) >= N:
+            log("Found solution! Returning chessboard: {}".format(existing_queens))
+            return existing_queens
+        possible_values = new_value_selector_function(existing_queens, N)
+        if not possible_values:
+            return None
+        else:
+            log("\tstill has {} possible queens: {}".format(len(possible_values), possible_values))
+            for possible_queen in possible_values:
+                queens = go(existing_queens + [possible_queen])
+                if queens is not None:
+                    return queens
             return None
 
-        possible_values = get_possible_values(chessboard) if possible_values is None else possible_values
-        if not possible_values:
-            conflicting_queen = chessboard.remove_last_queen()
-            return go(chessboard, iteration + 1, get_possible_values(chessboard) - set(conflicting_queen))
-
-        log("\tstill has {} possible queens: {}".format(len(possible_values), possible_values))
-        for possible_value in possible_values:
-            chessboard.add_queen(possible_value)
-            log("\tadded {}".format(possible_value))
-            if any_constraint_broken(chessboard, constraints):
-                conflicting_queen = chessboard.remove_last_queen()
-                possible_values.remove(conflicting_queen)
-                log("\rremoved {}".format(conflicting_queen))
-            return go(chessboard, iteration + 1, possible_values)
-
-    new_chessboard = Chessboard(N)
-    return go(chessboard=new_chessboard, iteration=0, possible_values=get_possible_values(new_chessboard))
-
-
-board_size = 5
-queen_count = 4
-constraints = [SameColumnConstraint(), SameRowConstraint(), SameDiagonalConstraint()]
-# csp = Csp(chessboard=Chessboard(board_size), constraints=constraints, n_queens=queen_count)
-# csp.run()
-csp(board_size, constraints, n_queens=queen_count, iterations=10000)
+    return go(existing_queens=[]), stats

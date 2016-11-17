@@ -1,5 +1,3 @@
-from random import randint
-
 from utils import DuplicateQueen, QueenOutOfChessboard, ChessboardIsEmpty
 
 
@@ -12,27 +10,22 @@ def any_constraint_broken(queens, constraints):
     return any(map(lambda constraint: constraint.is_broken(queens), constraints))
 
 
-def get_possible_values(queens, n):
-    """
-    :type queens: list[model.Queen]
-    :type n: int
-    :rtype: set[model.Queen]
-    """
-    possible_queens = set()
-    for x in range(0, n):
-        for y in range(0, n):
-            possible_queens.add(Queen(x, y))
-    return set(possible_queens - set(queens))
+class Stat(object):
+    def __init__(self, iteration, seconds, value):
+        """
+        :type iteration: int
+        :type seconds: float
+        :type value: int
+        """
+        self.iteration = iteration
+        self.seconds = seconds
+        self.value = value
 
+    def __str__(self):
+        return "Stat<#{} was {}, {}s>".format(self.iteration, self.value, self.seconds)
 
-def get_random_queen(n):
-    """
-    :type n: int
-    :rtype: model.Queen
-    """
-    x = randint(0, n - 1)
-    y = randint(0, n - 1)
-    return Queen(x, y)
+    def __repr__(self):
+        return self.__str__()
 
 
 class Queen(object):
