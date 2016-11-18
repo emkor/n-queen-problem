@@ -1,5 +1,6 @@
 from datetime import datetime
-from model import any_constraint_broken, Stat
+from model import any_constraint_broken
+from stats import Stat
 from utils import log, seconds_since
 
 
@@ -10,9 +11,7 @@ def csp(N, constraints, new_value_selector_function, timeout=10):
     :type timeout: int
     :rtype: list[model.Queen]
     """
-    stats = []
-    start_time = datetime.now()
-    log("Initializing with {} as new value generator".format(new_value_selector_function.func_name))
+
     def go(existing_queens):
         """
         :type existing_queens: list[model.Queen]
@@ -42,4 +41,7 @@ def csp(N, constraints, new_value_selector_function, timeout=10):
                     return queens
             return None
 
+    stats = []
+    start_time = datetime.now()
+    log("Initializing with {} as new value generator".format(new_value_selector_function.func_name))
     return go(existing_queens=[]), stats

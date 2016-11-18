@@ -1,6 +1,8 @@
 from datetime import datetime
 import matplotlib.pyplot as plt
 
+from stats import RunStats
+
 
 def visualize_stats(multiple_run_stats, color, label):
     """
@@ -25,15 +27,17 @@ def get_avg_iterations(mutliple_run_iterations):
         iterations_sum += len(run_iterations)
     return float(iterations_sum) / float(len(mutliple_run_iterations))
 
+
 def get_avg_seconds(mutliple_run_stats):
     """
-    :type mutliple_run_iterations: list[list[model.Stat]]
+    :type mutliple_run_stats: list[stats.RunStats]
     :rtype: float
     """
     time_sum = 0
     for run_stats in mutliple_run_stats:
-        time_sum += max([stat.seconds for stat in run_stats])
+        time_sum += run_stats.run_time()
     return float(time_sum) / float(len(mutliple_run_stats))
+
 
 def split_to_iters_time_and_values(run_stats):
     """
@@ -60,10 +64,16 @@ def log(message):
 
 
 def run_multiple_times(times, function, params):
+    """
+    :type times: int
+    :type function: function
+    :type params: list
+    :rtype: list[stats.RunStats]
+    """
     multiple_run_stats = []
     for i in range(0, times):
-        _, stats = function(*params)
-        multiple_run_stats.append(stats)
+        board, stats = function(*params)
+        multiple_run_stats.append(RunStats(params[0], board, params[2], stats))
     return multiple_run_stats
 
 

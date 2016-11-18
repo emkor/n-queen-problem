@@ -10,24 +10,6 @@ def any_constraint_broken(queens, constraints):
     return any(map(lambda constraint: constraint.is_broken(queens), constraints))
 
 
-class Stat(object):
-    def __init__(self, iteration, seconds, value):
-        """
-        :type iteration: int
-        :type seconds: float
-        :type value: int
-        """
-        self.iteration = iteration
-        self.seconds = seconds
-        self.value = value
-
-    def __str__(self):
-        return "Stat<#{} was {}, {}s>".format(self.iteration, self.value, self.seconds)
-
-    def __repr__(self):
-        return self.__str__()
-
-
 class Queen(object):
     def __init__(self, x, y):
         """
